@@ -1,4 +1,3 @@
-import ModeToggle from "@/components/ModeToggle";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import clsx from "clsx";
 import { GeistSans } from "geist/font";
@@ -23,7 +22,6 @@ export default function RootLayout({
       <body className={clsx(`${Geist.className} antialiased`, "bg-background")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <ModeToggle />
         </ThemeProvider>
       </body>
     </html>

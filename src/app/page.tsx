@@ -1,7 +1,12 @@
+import Hero from "@/components/Hero";
+import ModeToggle from "@/components/ModeToggle";
+import NavBar from "@/components/NavBar";
+
 export default function Home() {
   return (
     <main className="">
-      <h1>Bonsoir Aristide</h1>
+      <NavBar />
+      <Hero />
     </main>
   );
 }
