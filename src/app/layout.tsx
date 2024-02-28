@@ -1,3 +1,4 @@
+import NavBar from "@/components/NavBar";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import clsx from "clsx";
 import { GeistSans } from "geist/font";
@@ -21,6 +22,7 @@ export default function RootLayout({
       <head />
       <body className={clsx(`${Geist.className} antialiased`, "bg-background")}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <NavBar />
           {children}
         </ThemeProvider>
       </body>
