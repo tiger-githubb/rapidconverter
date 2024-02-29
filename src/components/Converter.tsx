@@ -1,8 +1,7 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Banknote } from "lucide-react";
 import ActualValues from "./ActualValues";
 import ConverterForm from "./converter-form";
+import { Overview } from "./overview";
 
 export default function Converter() {
   return (

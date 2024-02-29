@@ -5,80 +5,90 @@ import {
   PoundSterling,
   SwissFranc,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
-function ActualValues() {
+const currencies = [
+  { name: "Dollar americain", icon: <DollarSign />, code: "USD", symbol: "$" },
+  { name: "Euro", icon: <Euro />, code: "EUR", symbol: "€" },
+  { name: "Yen", icon: <JapaneseYen />, code: "JPY", symbol: "¥" },
+  { name: "Livre sterling", icon: <PoundSterling />, code: "GBP", symbol: "£" },
+  { name: "Franc suisse", icon: <SwissFranc />, code: "CHF", symbol: "CHF" },
+];
+
+function CurrencyCard({
+  currency,
+}: {
+  currency: { name: string; icon: JSX.Element; amount: string; symbol: string };
+}) {
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Dollar américain
-          </CardTitle>
-          <DollarSign className="mb-3 h-6 w-6" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">$ 0</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Euro</CardTitle>
-          <Euro />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">0 e</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Yen</CardTitle>
-          <JapaneseYen />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">0 Y</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Livre sterling</CardTitle>
-          <PoundSterling />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold"> 0 L</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Franc suisse</CardTitle>
-          <SwissFranc />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">0 F</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Franc CFA</CardTitle>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="h-4 w-4 text-muted-foreground"
-          >
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-          </svg>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">0 XOF</div>
-        </CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{currency.name}</CardTitle>
+        {currency.icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">
+          {currency.amount} {currency.symbol}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
-export default ActualValues;
+export default function ActualValues() {
+  const [conversionRates, setConversionRates] = useState<
+    {
+      name: string;
+      icon: JSX.Element;
+      amount: string;
+      code: string;
+      symbol: string;
+    }[]
+  >([]);
+
+  https: useEffect(() => {
+    async function fetchConversionRates() {
+      const apiKey = "B1HqIhmcQHDozOHKzxBhPz9qZ0UrYfDf";
+      const baseUrl = "https://api.currencybeacon.com/v1/latest";
+
+      try {
+        const response = await fetch(
+          `${baseUrl}?base=XOF&symbols=${currencies
+            .map((currency) => currency.code)
+            .join(",")}&api_key=${apiKey}`
+        );
+        if (!response.ok) {
+          throw new Error("Erreur lors de la récupération du taux de change");
+        }
+        const data = await response.json();
+        const conversionData = currencies.map((currency) => ({
+          ...currency,
+          amount: data.response.rates[currency.code].toFixed(6),
+        }));
+
+        setConversionRates(conversionData);
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération du taux de change :",
+          error
+        );
+        const conversionDataWithError = currencies.map((currency) => ({
+          ...currency,
+          amount: "Erreur",
+        }));
+        setConversionRates(conversionDataWithError);
+      }
+    }
+
+    fetchConversionRates();
+  }, []);
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      {conversionRates.map((currency, index) => (
+        <CurrencyCard key={index} currency={currency} />
+      ))}
+    </div>
+  );
+}
