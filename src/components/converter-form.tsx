@@ -70,6 +70,10 @@ export default function ConverterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversionResult, setConversionResult] =
     useState<ConversionResponse | null>(null);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const updateDateTime = () => {
+    setCurrentDateTime(new Date());
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -85,6 +89,7 @@ export default function ConverterForm() {
       setIsLoading(false);
     }
   };
+  setInterval(updateDateTime, 1000);
 
   return (
     <>
@@ -105,6 +110,7 @@ export default function ConverterForm() {
                     setFromCurrency((e.target as HTMLInputElement).value)
                   }
                   required
+                  value={fromCurrency}
                 >
                   {currencies.map(renderCurrencyRadio)}
                 </RadioGroup>
@@ -150,9 +156,10 @@ export default function ConverterForm() {
         <div className="col-span-4">
           <Card>
             <CardHeader>
-              <CardTitle>Convertisseur de devises</CardTitle>
-              <CardDescription>
-                Convertissez en XOF au taux de change réel
+              <CardTitle> {fromCurrency} vers XOF </CardTitle>
+              <CardDescription suppressHydrationWarning>
+                {" "}
+                {currentDateTime.toLocaleString()}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
