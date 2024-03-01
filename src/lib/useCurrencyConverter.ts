@@ -11,6 +11,27 @@ export async function fetchConversion(fromCurrency: string, amount: number) {
       throw new Error("Failed to fetch data");
     }
     const data: ConversionResponse = await response.json();
+
+    const existingAmounts: any[] = JSON.parse(
+      localStorage.getItem("convertedAmounts") || "[]"
+    );
+    const nextId =
+      existingAmounts.length > 0
+        ? existingAmounts[existingAmounts.length - 1].id + 1
+        : 1;
+    const convertedAmount = {
+      id: nextId,
+      amount: amount,
+      currency: fromCurrency,
+      result: data.value,
+    };
+
+    // Store the new conversion in localStorage
+    localStorage.setItem(
+      "convertedAmounts",
+      JSON.stringify([...existingAmounts, convertedAmount])
+    );
+
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);
