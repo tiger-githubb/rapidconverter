@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +22,7 @@ import {
   Banknote,
 } from "lucide-react";
 import { useState } from "react";
+import { ConversionHistory } from "./ConversionHistory";
 import { Overview } from "./overview";
 
 const currencies = [
@@ -110,7 +112,6 @@ export default function ConverterForm() {
                     setFromCurrency((e.target as HTMLInputElement).value)
                   }
                   required
-                  value={fromCurrency}
                 >
                   {currencies.map(renderCurrencyRadio)}
                 </RadioGroup>
@@ -152,8 +153,9 @@ export default function ConverterForm() {
           </Card>
         </div>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4">
+
+      <div className="grid gap-4 ">
+        <div className="col-span-1">
           <Card>
             <CardHeader>
               <CardTitle> {fromCurrency} vers XOF </CardTitle>
@@ -168,6 +170,25 @@ export default function ConverterForm() {
             <CardFooter></CardFooter>
           </Card>
         </div>
+      </div>
+
+      {/* section suivante */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <div className="col-span-4">
+          <Card>
+            <CardHeader>
+              <CardTitle> Historique de conversion </CardTitle>
+              <CardDescription suppressHydrationWarning>
+                {" "}
+                {currentDateTime.toLocaleString()}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-6">
+              <ConversionHistory />
+            </CardContent>
+            <CardFooter></CardFooter>
+          </Card>
+        </div>
         <div className="col-span-3">
           <Card className="h-full flex flex-col justify-center ">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -176,11 +197,7 @@ export default function ConverterForm() {
               </CardTitle>
               <Banknote />
             </CardHeader>
-            <CardContent>
-              <h2 className=" text-6xl font-bold ">
-                {conversionResult?.value.toFixed(2) || 0.0} XOF
-              </h2>
-            </CardContent>
+            <CardContent></CardContent>
           </Card>
         </div>
       </div>
