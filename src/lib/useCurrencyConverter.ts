@@ -26,7 +26,6 @@ export async function fetchConversion(fromCurrency: string, amount: number) {
       result: data.value,
     };
 
-    // Store the new conversion in localStorage
     localStorage.setItem(
       "convertedAmounts",
       JSON.stringify([...existingAmounts, convertedAmount])

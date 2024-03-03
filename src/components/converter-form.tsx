@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ConversionHistory } from "./ConversionHistory";
+import GlobalStatistics from "./GlobalStatistics";
 import { Overview } from "./overview";
 
 const currencies = [
@@ -191,13 +192,14 @@ export default function ConverterForm() {
         </div>
         <div className="col-span-3">
           <Card className="h-full flex flex-col justify-center ">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Résultat de la conversion de {amount} {fromCurrency} en XOF
+            <CardHeader className="">
+              <CardTitle className="">
+                les statistiques totales des operations
               </CardTitle>
-              <Banknote />
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <GlobalStatistics />
+            </CardContent>
           </Card>
         </div>
       </div>
