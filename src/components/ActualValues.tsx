@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const currencies = [
-  { name: "Dollar americain", icon: <DollarSign />, code: "USD", symbol: "$" },
+  { name: "Dollar américain", icon: <DollarSign />, code: "USD", symbol: "$" },
   { name: "Euro", icon: <Euro />, code: "EUR", symbol: "€" },
   { name: "Yen", icon: <JapaneseYen />, code: "JPY", symbol: "¥" },
   { name: "Livre sterling", icon: <PoundSterling />, code: "GBP", symbol: "£" },
@@ -28,9 +28,7 @@ function CurrencyCard({
         {currency.icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">
-          {currency.amount} {currency.symbol}
-        </div>
+        <div className="text-2xl font-bold">{currency.amount} XOF</div>
       </CardContent>
     </Card>
   );
@@ -47,7 +45,7 @@ export default function ActualValues() {
     }[]
   >([]);
 
-  https: useEffect(() => {
+  useEffect(() => {
     async function fetchConversionRates() {
       const apiKey = "B1HqIhmcQHDozOHKzxBhPz9qZ0UrYfDf";
       const baseUrl = "https://api.currencybeacon.com/v1/latest";
@@ -58,13 +56,16 @@ export default function ActualValues() {
             .map((currency) => currency.code)
             .join(",")}&api_key=${apiKey}`
         );
+
         if (!response.ok) {
           throw new Error("Erreur lors de la récupération du taux de change");
         }
+
         const data = await response.json();
+
         const conversionData = currencies.map((currency) => ({
           ...currency,
-          amount: data.response.rates[currency.code].toFixed(6),
+          amount: (1 / data.response.rates[currency.code]).toFixed(2),
         }));
 
         setConversionRates(conversionData);

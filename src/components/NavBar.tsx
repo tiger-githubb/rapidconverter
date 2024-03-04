@@ -8,7 +8,7 @@ export default function NavBar() {
         className="mt-0"
         navItems={[
           {
-            name: "Home",
+            name: "Acceuil",
             link: "/",
             icon: <HomeIcon />,
           },

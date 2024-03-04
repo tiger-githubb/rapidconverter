@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -22,8 +21,6 @@ import {
   Banknote,
 } from "lucide-react";
 import { useState } from "react";
-import { ConversionHistory } from "./ConversionHistory";
-import GlobalStatistics from "./GlobalStatistics";
 import { Overview } from "./overview";
 
 const currencies = [
@@ -50,7 +47,7 @@ const currencies = [
   },
 ];
 
-const renderCurrencyRadio = (currency: any) => (
+const renderCurrencyRadio = (currency: (typeof currencies)[number]) => (
   <div key={currency.code}>
     <RadioGroupItem
       value={currency.code}
@@ -68,15 +65,11 @@ const renderCurrencyRadio = (currency: any) => (
 );
 
 export default function ConverterForm() {
-  const [fromCurrency, setFromCurrency] = useState("");
+  const [fromCurrency, setFromCurrency] = useState("USD");
   const [amount, setAmount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [conversionResult, setConversionResult] =
     useState<ConversionResponse | null>(null);
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
-  const updateDateTime = () => {
-    setCurrentDateTime(new Date());
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,7 +85,6 @@ export default function ConverterForm() {
       setIsLoading(false);
     }
   };
-  setInterval(updateDateTime, 1000);
 
   return (
     <>
@@ -135,7 +127,6 @@ export default function ConverterForm() {
                 </Button>
               </form>
             </CardContent>
-            <CardFooter></CardFooter>
           </Card>
         </div>
         <div className="col-span-3">
@@ -156,52 +147,7 @@ export default function ConverterForm() {
       </div>
 
       <div className="grid gap-4 ">
-        <div className="col-span-1">
-          <Card>
-            <CardHeader>
-              <CardTitle> {fromCurrency} vers XOF </CardTitle>
-              <CardDescription suppressHydrationWarning>
-                {" "}
-                {currentDateTime.toLocaleString()}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <Overview />
-            </CardContent>
-            <CardFooter></CardFooter>
-          </Card>
-        </div>
-      </div>
-
-      {/* section suivante */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="col-span-4">
-          <Card>
-            <CardHeader>
-              <CardTitle> Historique de conversion </CardTitle>
-              <CardDescription suppressHydrationWarning>
-                {" "}
-                {currentDateTime.toLocaleString()}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <ConversionHistory />
-            </CardContent>
-            <CardFooter></CardFooter>
-          </Card>
-        </div>
-        <div className="col-span-3">
-          <Card className="h-full flex flex-col justify-center ">
-            <CardHeader className="">
-              <CardTitle className="">
-                les statistiques totales des operations
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GlobalStatistics />
-            </CardContent>
-          </Card>
-        </div>
+        <Overview currency={fromCurrency} />
       </div>
     </>
   );

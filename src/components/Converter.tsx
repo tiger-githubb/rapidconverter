@@ -1,8 +1,8 @@
 "use client";
 import ActualValues from "./ActualValues";
 import ConversionStatistics from "./ConversionCalculator";
+import { History } from "./History";
 import ConverterForm from "./converter-form";
-import { Overview } from "./overview";
 
 export default function Converter() {
   return (
@@ -14,6 +14,7 @@ export default function Converter() {
           </div>
           <ActualValues />
           <ConverterForm />
+          <History />
           <ConversionStatistics />
         </div>
       </div>
